@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load mptt_tags %}
+
+<section class="management-hierarchy">
+    <div class="hv-container">
+        <div class="hv-wrapper">
+
+            {% recursetree employees %}
+                {% if not node.is_leaf_node %}
+                    <div class="hv-item">
+                        <div class="hv-item-parent">
+                            <div class="person">
+                                <img src="https://pbs.twimg.com/profile_images/762654833455366144/QqQhkuK5.jpg" alt="">
+                                <p class="name">{{ node.name }}</p>
+                            </div>
+                        </div>
+                        <div class="hv-item-children">
+                            <div class="hv-item-child">
+                                <div class="hv-item">
+                                    {{ children }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="person">
+                        <img src="https://pbs.twimg.com/profile_images/762654833455366144/QqQhkuK5.jpg" alt="">
+                        <p class="name">{{ node.name }}</p>
+                    </div>
+                {% endif %}
+                </div>
+            {% endrecursetree %}
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
