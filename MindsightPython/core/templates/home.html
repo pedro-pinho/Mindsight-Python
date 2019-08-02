@@ -7,7 +7,6 @@
 <section class="management-hierarchy">
     <div class="hv-container">
         <div class="hv-wrapper">
-
             {% recursetree employees %}
                 {% if not node.is_leaf_node %}
                     <div class="hv-item">
@@ -19,12 +18,15 @@
                         </div>
                         <div class="hv-item-children">
                             <div class="hv-item-child">
-                                <div class="hv-item">
+                                {% if node.level == 0 %}
+                                    <div class="hv-item">
+                                {% endif %}    
                                     {{ children }}
-                                </div>
+                                {% if node.level == 0 %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                    </div>
                 {% else %}
                     <div class="person">
                         <img src="https://pbs.twimg.com/profile_images/762654833455366144/QqQhkuK5.jpg" alt="">
@@ -33,6 +35,7 @@
                 {% endif %}
                 </div>
             {% endrecursetree %}
+            </div>
         </div>
     </div>
 </section>

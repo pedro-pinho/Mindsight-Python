@@ -8,7 +8,7 @@ class RegisterEmployeeForm(forms.ModelForm):
     # salary = forms.forms.DecimalField(label='Salário', max_digits=10, decimal_places=2)
     class Meta:
         model = Employees
-        fields = ("name","parent","salary")
+        fields = ('name','parent','salary')
 
     def clean_name(self):
         name = self.cleaned_data['name']

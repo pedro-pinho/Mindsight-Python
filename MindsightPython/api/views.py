@@ -15,8 +15,8 @@ class registerView(View):
         employees = Employees.objects.root_nodes()
         form = self.registerForm()
         serializer = EmployeeListSerializer(employees, many=True)
-        return Response(serializer.data)
-        # return render(request, self.template_name, {'form': form, 'employees': employees})
+        # return Response(serializer.data)
+        return render(request, self.template_name, {'form': form, 'employees': employees})
 
     def post(self, request):
         form = self.registerForm(self.request.POST or None)
