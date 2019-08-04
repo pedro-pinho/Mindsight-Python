@@ -12,7 +12,21 @@ class Employees(MPTTModel):
         related_name='children',
         db_index=True
     )
+
+    def manager(self):
+        name = self.get_ancestors(ascending=True, include_self=False).values('name')
+        if name:
+            return name[0]['name']
+        return None
     
+    def descendantCount(self):
+        count = self.get_descendant_count(ascending=True, include_self=False)
+        return count
+
+    def descendant(self):
+        descendants = self.get_descendants(ascending=True, include_self=False)
+        return descendants
+
     def __str__(self):
         return self.name
 

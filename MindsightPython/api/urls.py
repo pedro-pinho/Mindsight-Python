@@ -5,5 +5,5 @@ from MindsightPython.api import views
 
 app_name = 'api'
 urlpatterns = [
-    path('add/', views.register, name='register')
+    path('', views.api_employee, name='employees')
 ]

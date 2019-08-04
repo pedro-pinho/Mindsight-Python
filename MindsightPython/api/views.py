@@ -1,34 +1,22 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from django.views.generic import View
-from django.contrib import messages
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
+
 from .forms import RegisterEmployeeForm
 from .models import Employees
-from .serializers import EmployeeListSerializer
+from .serializers import EmployeeAPISerializer, EmployeeAPIIncludeSerializer
 
-class registerView(View):
-    model = Employees
-    registerForm = RegisterEmployeeForm
-    template_name = 'register.html'
-    
-    def get(self, request):
-        employees = Employees.objects.root_nodes()
-        form = self.registerForm()
-        serializer = EmployeeListSerializer(employees, many=True)
-        # return Response(serializer.data)
-        return render(request, self.template_name, {'form': form, 'employees': employees})
-
-    def post(self, request):
-        form = self.registerForm(self.request.POST or None)
-        # manager = get_object_or_404(Employees, name=manager_name)
+@api_view(['GET', 'POST'])
+def api_employee(request):
+    if request.method == 'GET':
         employees = Employees.objects.all()
-        if form.is_valid():
-            employee = form.save(commit=True)
-            # employee.manager = manager
-            # employee.save()
-            employees = Employees.objects.all()
-            form = self.registerForm()
-            messages.success(request, 'Inserido com sucesso.')
-        return render(request, self.template_name, {'form': form, 'employees': employees})
+        serializer = EmployeeAPISerializer(employees, many=True)
+        return Response(serializer.data)
 
-register = registerView.as_view()
+    elif request.method == 'POST':
+        parent = Employees.objects.get(name=request.data.pop('manager'))
+        serializer = EmployeeAPIIncludeSerializer(data=request.data, read_only=False)
+        if serializer.is_valid():
+            serializer.save(parent=parent)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
