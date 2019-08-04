@@ -19,12 +19,12 @@ class Employees(MPTTModel):
             return name[0]['name']
         return None
     
-    def descendantCount(self):
-        count = self.get_descendant_count(ascending=True, include_self=False)
+    def descendant_count(self):
+        count = self.get_descendant_count()
         return count
 
-    def descendant(self):
-        descendants = self.get_descendants(ascending=True, include_self=False)
+    def descendants(self):
+        descendants = self.get_descendants(include_self=False)
         return descendants
 
     def __str__(self):

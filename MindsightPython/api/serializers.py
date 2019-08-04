@@ -36,3 +36,10 @@ class EmployeeAPIIncludeSerializer(serializers.Serializer):
         new_node.insert_at(parent, position='last-child', save=True)
     class Meta:
         fields = ('id', 'name', 'salary','parent')
+
+
+class EmployeeAPIInfoSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    salary = serializers.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        fields = ('name', 'salary')
