@@ -27,6 +27,13 @@ class Employees(MPTTModel):
         descendants = self.get_descendants(include_self=False)
         return descendants
 
+    def descendants_salary(self):
+        descendants = self.get_descendants(include_self=False)
+        salary = 0
+        for descendant in descendants:
+            salary += descendant.salary
+        return salary
+
     def __str__(self):
         return self.name
 
