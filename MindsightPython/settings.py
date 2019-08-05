@@ -68,9 +68,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            # 'libraries': {
-            #     'get_child_employees': 'MindsightPython.employees.get_child_employees'
-            # },
         },
     },
 ]
@@ -141,11 +138,10 @@ COMPRESS_PRECOMPILERS = (
 )
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'MindsightPython.core.exception_handler.custom_exception_handler'
 }
 
 try:

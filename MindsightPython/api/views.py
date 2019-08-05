@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status, generics
+from rest_framework.exceptions import ValidationError
 
-from .forms import RegisterEmployeeForm
 from .models import Employees
 from .serializers import EmployeeAPISerializer, EmployeeAPIIncludeSerializer, EmployeeAPIInfoSerializer
 
@@ -14,12 +14,29 @@ def api_employee(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        parent = Employees.objects.get(name=request.data.pop('manager'))
-        serializer = EmployeeAPIIncludeSerializer(data=request.data, read_only=False)
-        if serializer.is_valid():
-            serializer.save(parent=parent)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if (not request.data.get('name')):
+            raise ValidationError('Nome do funcionário é obrigatório.')
+
+        if (not request.data.get('salary')):
+            raise ValidationError('Salário é obrigatório, não existe almoço grátis!')
+
+        duplicate = Employees.objects.filter(name=request.data.get('name')).first()
+        if (duplicate):
+            raise ValidationError('Nome já existe.')
+
+        if (request.data.get('manager')):
+            parent = Employees.objects.get(name=request.data.pop('manager'))
+        else:
+            parent = None
+            
+        from django.db import transaction
+        with Employees.objects.disable_mptt_updates():
+            serializer = EmployeeAPIIncludeSerializer(data=request.data, read_only=False)
+            if serializer.is_valid():
+                serializer.save(parent=parent)
+                Employees.objects.rebuild()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EmployeeInfoList(generics.ListAPIView):

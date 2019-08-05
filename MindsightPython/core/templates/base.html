@@ -8,9 +8,8 @@
     <title>Mindsight Prototype</title>
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" /> 
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/hierarchy-view.css' %}" />
+    <link href="https://unpkg.com/treeflex/dist/css/treeflex.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
 
 </head>
 <body>
@@ -24,7 +23,7 @@
                         <a class="pure-button" href="{% url 'core:home' %}">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="pure-button" href="{% url 'api:employees' %}">Cadastro</a>
+                        <a class="pure-button" href="{% url 'api:employees' %}">API</a>
                     </li>
                 </ul>
             </nav>

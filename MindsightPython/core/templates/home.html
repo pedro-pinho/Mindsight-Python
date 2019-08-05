@@ -3,42 +3,30 @@
 {% block content %}
 
 {% load mptt_tags %}
-
-<section class="management-hierarchy">
-    <div class="hv-container">
-        <div class="hv-wrapper">
-            {% recursetree employees %}
-                {% if not node.is_leaf_node %}
-                    <div class="hv-item">
-                        <div class="hv-item-parent">
-                            <div class="person">
-                                <img src="https://pbs.twimg.com/profile_images/762654833455366144/QqQhkuK5.jpg" alt="">
-                                <p class="name">{{ node.name }}</p>
-                            </div>
-                        </div>
-                        <div class="hv-item-children">
-                            <div class="hv-item-child">
-                                {% if node.level == 0 %}
-                                    <div class="hv-item">
-                                {% endif %}    
-                                    {{ children }}
-                                {% if node.level == 0 %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                {% else %}
-                    <div class="person">
-                        <img src="https://pbs.twimg.com/profile_images/762654833455366144/QqQhkuK5.jpg" alt="">
-                        <p class="name">{{ node.name }}</p>
-                    </div>
+<div class="tf-tree">
+    <ul>
+        {% recursetree employees %}
+            <li>
+                <span class="tf-nc"><a href="#{{ node.id }}">{{ node.name }}</a></span>
+                {% if not node.is_leaf_node and children %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
                 {% endif %}
-                </div>
-            {% endrecursetree %}
-            </div>
+            </li>
+        {% endrecursetree %}
+    </ul>
+</div>
+<div class="pure-g">
+    {% for node,structure in employees|tree_info %}
+        {% if node.descendants.count > 0 %}
+        <div id="{{ node.id }}" class="pure-u-1 pure-u-md-1-3">
+            <p>{{ node.name }}</p>
+            <p>Total funcionários {{ node.descendants.count }}</p>
+            <p>Total salários funcionários {{ node.descendants_salary }}</p>    
         </div>
-    </div>
-</section>
-
+        {% endif %}
+    {% endfor %}
+</div>
 
 {% endblock %}
