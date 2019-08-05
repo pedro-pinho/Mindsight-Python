@@ -18,7 +18,7 @@ def api_employee(request):
             raise ValidationError('Nome do funcionário é obrigatório.')
 
         if (not request.data.get('salary')):
-            raise ValidationError('Salário é obrigatório, não existe almoço grátis!')
+            raise ValidationError('Informe o salário.')
 
         duplicate = Employees.objects.filter(name=request.data.get('name')).first()
         if (duplicate):
