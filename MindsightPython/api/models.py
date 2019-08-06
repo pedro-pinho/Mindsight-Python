@@ -15,7 +15,7 @@ class Employees(MPTTModel):
 
     def manager(self):
         name = self.get_ancestors(ascending=True, include_self=False).values('name')
-        if name:
+        if name and name[0] and name[0]['name']:
             return name[0]['name']
         return None
     

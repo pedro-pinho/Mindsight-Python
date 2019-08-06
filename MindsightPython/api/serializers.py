@@ -1,6 +1,7 @@
 from .models import Employees
 from rest_framework import serializers
 from rest_framework_recursive.fields import RecursiveField
+from rest_framework.validators import UniqueValidator
 
 class EmployeeListSerializer(serializers.Serializer):
     name = serializers.CharField()
@@ -21,7 +22,7 @@ class EmployeeAPISerializer(serializers.Serializer):
         fields = ('name', 'salary','manager')
 
 class EmployeeAPIIncludeSerializer(serializers.Serializer):
-    name = serializers.CharField()
+    name = serializers.CharField(validators=[UniqueValidator(queryset=Employees.objects.all())])
     salary = serializers.DecimalField(max_digits=10, decimal_places=2)
 
     def create(self, validated_data):
@@ -36,6 +37,7 @@ class EmployeeAPIIncludeSerializer(serializers.Serializer):
         new_node.insert_at(parent, position='last-child', save=True)
     class Meta:
         fields = ('id', 'name', 'salary','parent')
+        extra_kwargs = {'name': {'error_messages': {'required': 'Nome do funcionário é obrigatório.'}}, 'salary': {'error_messages':{'required': 'Informe o salário.'}}}
 
 
 class EmployeeAPIInfoSerializer(serializers.Serializer):

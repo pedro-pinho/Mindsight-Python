@@ -138,9 +138,9 @@ COMPRESS_PRECOMPILERS = (
 )
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
     'EXCEPTION_HANDLER': 'MindsightPython.core.exception_handler.custom_exception_handler'
 }
 

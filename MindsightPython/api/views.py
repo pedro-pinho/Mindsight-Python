@@ -1,29 +1,18 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework import status, generics
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound
 
 from .models import Employees
 from .serializers import EmployeeAPISerializer, EmployeeAPIIncludeSerializer, EmployeeAPIInfoSerializer
 
-@api_view(['GET', 'POST'])
-def api_employee(request):
-    if request.method == 'GET':
+class ApiView(APIView):    
+    def get(self, request):
         employees = Employees.objects.all()
         serializer = EmployeeAPISerializer(employees, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
-        if (not request.data.get('name')):
-            raise ValidationError('Nome do funcionário é obrigatório.')
-
-        if (not request.data.get('salary')):
-            raise ValidationError('Informe o salário.')
-
-        duplicate = Employees.objects.filter(name=request.data.get('name')).first()
-        if (duplicate):
-            raise ValidationError('Nome já existe.')
-
+    def post(self, request):
         if (request.data.get('manager')):
             parent = Employees.objects.get(name=request.data.pop('manager'))
         else:
@@ -47,4 +36,4 @@ class EmployeeInfoList(generics.ListAPIView):
         boss = Employees.objects.filter(name=name) or None
         if (boss != None):
             return boss.first().descendants()
-        return Employees.objects.all()
+        raise NotFound()

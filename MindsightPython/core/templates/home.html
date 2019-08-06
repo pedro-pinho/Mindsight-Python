@@ -7,7 +7,7 @@
     <ul>
         {% recursetree employees %}
             <li>
-                <span class="tf-nc"><a href="#{{ node.id }}">{{ node.name }}</a></span>
+                <span class="tf-nc">{{ node.name }}</span>
                 {% if not node.is_leaf_node and children %}
                     <ul class="children">
                         {{ children }}
@@ -22,8 +22,8 @@
         {% if node.descendants.count > 0 %}
         <div id="{{ node.id }}" class="pure-u-1 pure-u-md-1-3">
             <p>{{ node.name }}</p>
-            <p>Total funcionários {{ node.descendants.count }}</p>
-            <p>Total salários funcionários {{ node.descendants_salary }}</p>    
+            <p>Total funcionários: {{ node.descendants.count }}</p>
+            <p>Total salários funcionários: {{ node.descendants_salary }}</p>    
         </div>
         {% endif %}
     {% endfor %}
